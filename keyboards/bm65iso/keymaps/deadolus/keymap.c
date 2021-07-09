@@ -85,9 +85,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #endif
 
   [_RED_] = LAYOUT(
-      KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, _______, LGUI(KC_END),
+      KC_GRV, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, TG(_YELLOW_), LGUI(KC_END),
       _______, _______, _______, _______, _______, _______, _______,  _______, _______, _______,_______, _______, _______, TO(0),    LGUI(KC_PAUSE),
-      _______, TO(_GREEN_), TO(_BLUE_), TO(_CYAN_), TO(_MAGENTA_), TO(_YELLOW_), _______, _______, _______,   _______, _______, _______, _______,        LGUI(KC_DEL),
+      _______, TO(_GREEN_), TO(_BLUE_), TO(_CYAN_), TO(_MAGENTA_), _______, _______, _______, _______,   _______, _______, _______, _______,        LGUI(KC_DEL),
       _______,_______ ,_______ ,_______ , _______, _______, _______, _______, _______, _______, _______,  _______,_______ , KC_VOLU, _______,
       RESET, _______, _______,                   KC_LEAD,                            _______, _______,                  KC_MPLY, KC_VOLD, KC_MUTE
       ),
@@ -100,7 +100,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_HOME, KC_END,  _______, _______, _______, _______,
       _______, _______, _______,                   _______,                            _______, _______,         _______, _______, _______
       ),
-
 
   [_BLUE_] = LAYOUT(
       _______, DYN_MACRO_PLAY1, DYN_MACRO_PLAY2, _______, _______, _______, _______, _______, KC_NUMLOCK, KC_PSLS, KC_PAST, KC_PMNS, _______, _______, _______,
@@ -123,15 +122,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,TO(0),    _______,
 
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+      _______, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______, _______, _______, _______, _______, _______,
       _______, _______, _______,                   _______,                            _______, _______,          _______, _______, _______
       ),
-  [_YELLOW_] = LAYOUT(
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,TO(0),    _______,
+  [_YELLOW_] = LAYOUT( //F-Keys layer, use red-minus to toggle on/off, used to have sticky Fkeys
+      _______, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, _______, _______,
+      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,_______,  _______,
 
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           _______,
-      _______, RGB_TOG, RGB_MOD, RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______, _______, _______, _______, _______, _______,
+      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
       _______, _______, _______,                   _______,                            _______, _______,          _______, _______, _______
       ),
 
@@ -228,20 +227,7 @@ void setCapsLock(void) {
   }
 }
 
-void set_layer_color(int layer) {
-  int ledkey=0;
-  for(int i=0; i<MATRIX_COLS*MATRIX_ROWS;i++) {
-    uint8_t row = i/MATRIX_COLS;
-    uint8_t col=(i-(i/MATRIX_COLS)*MATRIX_COLS);
-    uint16_t key=pgm_read_word(&keymaps[layer][row][col]);
-    //continue if this is not a valid key
-    if(key==KC_NO) { continue; }
-    //clear key if it is only a transition
-    if ((key == KC_TRNS)) {
-      if(rgb_matrix_get_flags() != LED_FLAG_ALL){
-        rgb_matrix_set_color(ledkey, 0, 0, 0);
-      }
-    }else {
+void lightUpKey(int key, int layer) {
       //this key does something - light it up
       HSV hsv = {
         .h = pgm_read_byte(&ledmap[layer][0]),
@@ -252,16 +238,47 @@ void set_layer_color(int layer) {
       RGB rgb = hsv_to_rgb(hsv);
       float f = (float)rgb_matrix_config.hsv.v / UINT8_MAX;
       if( (layer != 0) || (rgb_matrix_get_flags() != LED_FLAG_ALL))
-        rgb_matrix_set_color(ledkey, f * rgb.r, f * rgb.g, f * rgb.b);
+        rgb_matrix_set_color(key, f * rgb.r, f * rgb.g, f * rgb.b);
+}
+
+void set_layer_color(int layer) {
+  int ledkey=0;
+  for(int i=0; i<MATRIX_COLS*MATRIX_ROWS;i++) {
+    uint8_t row = i/MATRIX_COLS;
+    uint8_t col=(i-(i/MATRIX_COLS)*MATRIX_COLS);
+    uint16_t key=pgm_read_word(&keymaps[layer][row][col]);
+    //continue if this is not a valid key
+    if(key==KC_NO) { continue; }
+    //clear key if it is only a transition
+    int keyLayer=layer;
+    while((key == KC_TRNS) && (keyLayer > 0)) {
+      --keyLayer;
+      if(!IS_LAYER_ON_STATE(layer_state, keyLayer)) continue;
+      key=pgm_read_word(&keymaps[keyLayer][row][col]);
+    }
+    if ((key == KC_TRNS)) {
+      /* if(layer>0) { */
+      /*   set_layer_color(layer-1); */
+      /* } else { */
+      if(rgb_matrix_get_flags() != LED_FLAG_ALL){
+        rgb_matrix_set_color(ledkey, 0, 0, 0);
+        /* } */
+    }
+    } else {
+      //this key does something - light it up
+      lightUpKey(ledkey, keyLayer);
     }
     //if we are on layer 0 set capslock to correct status
-    if(layer==0 && i==30) { setCapsLock(); }
+    if(keyLayer==0 && i==30) { setCapsLock(); }
     ledkey++;
   }
   return;
 }
 
 void rgb_matrix_indicators_user(void) {
+  if(IS_LAYER_ON_STATE(layer_state, 1)) {
+    set_layer_color(1);
+  }
   set_layer_color(get_highest_layer(layer_state));
 
 }
