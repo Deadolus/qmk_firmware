@@ -172,7 +172,7 @@ void keyboard_post_init_user(void) {
   debug_enable=true;
   debug_matrix=true;
 #endif
-  rgb_matrix_set_flags(LED_FLAG_UNDERGLOW);
+  rgb_matrix_set_flags(LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER | LED_FLAG_INDICATOR);
 }
 
 
