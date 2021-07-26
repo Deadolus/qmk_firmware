@@ -101,7 +101,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
       _______, _______, _______,_______ , _______, _______, _______,  KC_PGDN, KC_PGUP, KC_PSCR,_______, _______, _______, TO(0),   _______,
       _______, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, _______, _______, KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP,   KC_MS_RIGHT, KC_MS_BTN1, KC_MS_BTN2, _______,    _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_HOME, KC_END,  _______, _______, _______, _______,
+      _______, _______, _______, _______, _______, _______, _______, _______, KC_MS_BTN3, KC_HOME, KC_END,  _______, _______, _______, _______,
       _______, _______, _______,                   _______,                            _______, _______,         _______, _______, _______
       ),
 
@@ -300,6 +300,13 @@ void matrix_scan_user(void) {
     SEQ_ONE_KEY(KC_F) {
       // Anything you can do in a macro.
       SEND_STRING("QMK is awesome.");
+    }
+    SEQ_ONE_KEY(KC_V) {
+      register_code(KC_LCTL);
+      register_code(KC_LALT);
+      SEND_STRING("x");
+      unregister_code(KC_LCTL);
+      unregister_code(KC_LALT);
     }
     SEQ_TWO_KEYS(KC_D, KC_D) {
       SEND_STRING(SS_LCTL("a") SS_LCTL("c"));
