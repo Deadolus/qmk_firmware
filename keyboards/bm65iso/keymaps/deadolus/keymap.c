@@ -16,23 +16,6 @@
 #include QMK_KEYBOARD_H
 #include "keymap.h"
 
-#ifdef TAP_DANCE_ENABLE
-enum {
-  TD_HOME_END,
-  TD_WHEEL_UP,
-  TD_WHEEL_DOWN,
-};
-
-// Tap Dance definitions
-qk_tap_dance_action_t tap_dance_actions[] = {
-  //tap once for home, twice for end
-  [TD_HOME_END] = ACTION_TAP_DANCE_DOUBLE(KC_HOME, KC_END),
-  [TD_WHEEL_UP] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_UP,KC_PGUP),
-  [TD_WHEEL_DOWN] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_DOWN,KC_PGDOWN)
-};
-#endif
-
-
 // // Defines names for use in layer keycodes and the keymap
 enum  layers {
   _BL,
@@ -43,6 +26,56 @@ enum  layers {
   _MAGENTA_,
   _YELLOW_
 };
+void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1 && (state->interrupted || !state->pressed)) {
+        register_code16(KC_ESC);
+        unregister_code16(KC_ESC);
+        return;
+    } else {
+        //register_code(KC_SCLN);
+        layer_on(_GREEN_);
+    }
+}
+
+void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1 ) {
+        layer_off(_GREEN_);
+    } else {
+        //register_code(KC_SCLN);
+        //layer_on(_GREEN_);
+    }
+}
+void dance_cln_tapped(qk_tap_dance_state_t *state, void *user_data) {
+    if (state->count == 1) {
+      if(state->pressed) {
+        layer_on(_GREEN_);
+      }
+       // unregister_code16(KC_ESC);
+    } else {
+      //layer_on(layer);
+        //unregister_code(KC_SCLN);
+    }
+}
+
+#ifdef TAP_DANCE_ENABLE
+enum {
+  TD_HOME_END,
+  TD_WHEEL_UP,
+  TD_WHEEL_DOWN,
+  TD_ESC_GREEN,
+};
+
+// Tap Dance definitions
+qk_tap_dance_action_t tap_dance_actions[] = {
+  //tap once for home, twice for end
+  [TD_HOME_END] = ACTION_TAP_DANCE_DOUBLE(KC_HOME, KC_END),
+  [TD_WHEEL_UP] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_UP,KC_PGUP),
+  [TD_WHEEL_DOWN] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_DOWN,KC_PGDOWN),
+  [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED(dance_cln_tapped, dance_cln_finished, dance_cln_reset)
+};
+#endif
+
+
 
 
 
@@ -71,8 +104,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /*     ), */
   [_BL] = LAYOUT(
       KC_CAPS,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6,    KC_7,    KC_8,    KC_9,   KC_0,   KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,
-      KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_ENT, TD(TD_HOME_END),
-      KC_ESC, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_NUHS,         TD(TD_WHEEL_UP),
+      LT(_BLUE_,KC_TAB),  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, LT(_YELLOW_, KC_ENT), TD(TD_HOME_END),
+      TD(TD_ESC_GREEN), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_NUHS,         TD(TD_WHEEL_UP),
       KC_LSHIFT, KC_NUBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSHIFT, KC_UP,  TD(TD_WHEEL_DOWN),
       KC_LCTL, KC_LGUI, KC_LALT,                   KC_SPC,                             KC_RALT, MO(_RED_),         KC_LEFT, KC_DOWN, KC_RGHT
 
@@ -99,19 +132,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
   [_GREEN_] = LAYOUT(
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
-      _______, _______, _______,_______ , _______, _______, _______,  KC_PGDN, KC_PGUP, KC_PSCR,_______, _______, _______, TO(0),   _______,
-      _______, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, _______, _______, KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP,   KC_MS_RIGHT, KC_MS_BTN1, KC_MS_BTN2, _______,    _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, KC_MS_BTN3, KC_HOME, KC_END,  _______, _______, _______, _______,
+      _______, _______, _______,_______ , _______, _______, _______,  TD(TD_WHEEL_DOWN), TD(TD_WHEEL_UP), KC_PSCR,_______, _______, _______, TO(0),   _______,
+      _______, _______, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, _______, KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP,   KC_MS_RIGHT, KC_MS_BTN1, KC_MS_BTN2, _______,    LCTL(KC_PGUP),
+      _______, _______, _______, _______, _______, _______, _______, _______, KC_MS_BTN3, KC_HOME, KC_END,  _______, _______, _______, LCTL(KC_PGDOWN),
       _______, _______, _______,                   _______,                            _______, _______,         _______, _______, _______
       ),
 
   [_BLUE_] = LAYOUT(
-      _______, DYN_MACRO_PLAY1, DYN_MACRO_PLAY2, _______, _______, _______, _______, _______, KC_NUMLOCK, KC_PSLS, KC_PAST, KC_PMNS, _______, _______, _______,
-      _______, DYN_REC_START1, DYN_REC_START2, _______, _______, _______, _______, _______, _______,KC_P7, KC_P8, KC_P9, KC_PMNS, TO(0),    _______,
+      _______, DYN_MACRO_PLAY1, DYN_MACRO_PLAY2, _______, _______, _______,  KC_NUMLOCK, KC_PSLS, KC_PAST, KC_PMNS, _______, _______,_______, _______, _______,
+      _______, DYN_REC_START1, DYN_REC_START2, _______, _______, _______, _______, KC_P7, KC_P8, KC_P9, KC_PMNS,_______, _______, TO(0),    _______,
 
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_P4, KC_P5, KC_P6, KC_PPLS,           _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_P1, KC_P2, KC_P3, KC_PENT, _______, _______,
-      _______, _______, _______,                   _______,                            KC_0, KC_PCMM,          _______, _______, _______
+      _______, _______, _______, _______, _______, _______, _______,  KC_P4, KC_P5, KC_P6, KC_PPLS,           _______, _______,_______,
+      _______, _______, _______, _______, _______, _______, _______,  _______, KC_P1, KC_P2, KC_P3, KC_PENT,  _______,_______, _______,
+      _______, _______, _______,                   KC_0,                            KC_PCMM, _______,          _______, _______, _______
       ),
   [_CYAN_] = LAYOUT(
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
