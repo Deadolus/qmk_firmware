@@ -26,13 +26,16 @@ enum  layers {
   _MAGENTA_,
   _YELLOW_
 };
+
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1 && (state->interrupted || !state->pressed)) {
+  if (state->count == 1) {
+        if (state->interrupted || !state->pressed) {
         register_code16(KC_ESC);
         unregister_code16(KC_ESC);
         return;
+        }
+        layer_on(_GREEN_);
     } else {
-        //register_code(KC_SCLN);
         layer_on(_GREEN_);
     }
 }
@@ -40,20 +43,6 @@ void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
 void dance_cln_reset(qk_tap_dance_state_t *state, void *user_data) {
     if (state->count == 1 ) {
         layer_off(_GREEN_);
-    } else {
-        //register_code(KC_SCLN);
-        //layer_on(_GREEN_);
-    }
-}
-void dance_cln_tapped(qk_tap_dance_state_t *state, void *user_data) {
-    if (state->count == 1) {
-      if(state->pressed) {
-        layer_on(_GREEN_);
-      }
-       // unregister_code16(KC_ESC);
-    } else {
-      //layer_on(layer);
-        //unregister_code(KC_SCLN);
     }
 }
 
@@ -71,13 +60,9 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_HOME_END] = ACTION_TAP_DANCE_DOUBLE(KC_HOME, KC_END),
   [TD_WHEEL_UP] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_UP,KC_PGUP),
   [TD_WHEEL_DOWN] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_DOWN,KC_PGDOWN),
-  [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED(dance_cln_tapped, dance_cln_finished, dance_cln_reset)
+  [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset)
 };
 #endif
-
-
-
-
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /*
