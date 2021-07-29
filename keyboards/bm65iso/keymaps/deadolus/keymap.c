@@ -227,6 +227,18 @@ void keyboard_post_init_user(void) {
   rgb_matrix_set_flags(LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER | LED_FLAG_INDICATOR);
 }
 
+layer_state_t layer_state_set_user(layer_state_t state) {
+//make sure we can enter numbers when entering blue layer -> numlock on
+  if(IS_LAYER_ON_STATE(state, _BLUE_)) {
+    led_t ledState = host_keyboard_led_state();
+    if (!ledState.num_lock) {
+      register_code(KC_NUMLOCK);
+      unregister_code(KC_NUMLOCK);
+    }
+  }
+  return state;
+}
+
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #ifdef CONSOLE_ENABLE
