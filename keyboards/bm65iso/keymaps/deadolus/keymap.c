@@ -278,6 +278,18 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
 }
 
+void setEscKey(void) {
+  if (get_autoshift_state()) {
+    rgb_matrix_set_color(0, 0x00, 0xFF, 0x00);
+
+  } else {
+    if((rgb_matrix_get_flags() != LED_FLAG_ALL)) {
+      rgb_matrix_set_color(0, 0x0, 0x0, 0x0);
+    }
+  }
+}
+
+
 void setCapsLock(void) {
   led_t host_leds = host_keyboard_led_state();
   if (host_leds.caps_lock) {
@@ -334,6 +346,7 @@ void set_layer_color(int layer) {
     }
     //if we are on layer 0 set capslock to correct status
     if(keyLayer==0 && i==30) { setCapsLock(); }
+    if(keyLayer==0 && i==0) { setEscKey(); }
     ledkey++;
   }
   return;
