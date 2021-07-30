@@ -146,7 +146,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
   [_GREEN_] = LAYOUT(
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+      KC_ASTG, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
       _______, _______, _______,_______ , _______, _______, _______,  TD(TD_WHEEL_DOWN), TD(TD_WHEEL_UP), KC_PSCR,_______, _______, _______, TO(0),   _______,
       _______, _______, KC_MS_ACCEL0, KC_MS_ACCEL1, KC_MS_ACCEL2, _______, KC_MS_LEFT, KC_MS_DOWN, KC_MS_UP,   KC_MS_RIGHT, KC_MS_BTN1, KC_MS_BTN2, _______,    LCTL(KC_PGUP),
       _______, _______, _______, _______, _______, _______, _______, _______, KC_MS_BTN3, KC_HOME, KC_END,  _______, _______, _______, LCTL(KC_PGDOWN),
@@ -225,6 +225,7 @@ void keyboard_post_init_user(void) {
   debug_matrix=true;
 #endif
   rgb_matrix_set_flags(LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER | LED_FLAG_INDICATOR);
+  autoshift_disable();
 }
 
 layer_state_t layer_state_set_user(layer_state_t state) {
@@ -232,8 +233,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
   if(IS_LAYER_ON_STATE(state, _BLUE_)) {
     led_t ledState = host_keyboard_led_state();
     if (!ledState.num_lock) {
-      register_code(KC_NUMLOCK);
-      unregister_code(KC_NUMLOCK);
+      tap_code(KC_NUMLOCK);
     }
   }
   return state;
