@@ -31,8 +31,8 @@ void dance_blue_finished(qk_tap_dance_state_t *state, void *user_data) {
   if(get_mods()) return;
   if (state->count == 1) {
         if (state->interrupted || !state->pressed) {
-        register_code16(KC_TAB);
-        unregister_code16(KC_TAB);
+        register_code16(KC_CAPS);
+        unregister_code16(KC_CAPS);
         return;
         }
         layer_on(_BLUE_);
@@ -95,7 +95,7 @@ enum {
   TD_WHEEL_UP,
   TD_WHEEL_DOWN,
   TD_ESC_GREEN,
-  TD_TAB_BLUE,
+  TD_CAPS_BLUE,
   TD_BRK_RED
 };
 
@@ -106,7 +106,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_WHEEL_UP] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_UP,KC_PGUP),
   [TD_WHEEL_DOWN] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_DOWN,KC_PGDOWN),
   [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset),
-  [TD_TAB_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_blue_finished, dance_cln_reset),
+  [TD_CAPS_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_blue_finished, dance_cln_reset),
   [TD_BRK_RED] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_red_finished, dance_cln_reset)
 };
 #endif
@@ -135,8 +135,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   /*     KC_LCTL, KC_LGUI, KC_LAPO,                   KC_SPC,                             KC_RAPC, MO(_RED_),         KC_LEFT, KC_DOWN, KC_RGHT  \ */
   /*     ), */
   [_BL] = LAYOUT(
-      KC_CAPS,   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6,    KC_7,    KC_8,    KC_9,   KC_0,   KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,
-      TD(TD_TAB_BLUE),  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, LT(_YELLOW_, KC_ENT), TD(TD_HOME_END),
+      TD(TD_CAPS_BLUE),   KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6,    KC_7,    KC_8,    KC_9,   KC_0,   KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,
+      KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, LT(_YELLOW_, KC_ENT), TD(TD_HOME_END),
       TD(TD_ESC_GREEN), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_NUHS,         TD(TD_WHEEL_UP),
       KC_LSPO, KC_NUBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC, KC_UP,  TD(TD_WHEEL_DOWN),
       KC_LCPO, KC_LGUI, KC_LAPO,                   LGUI_T(KC_SPC),                             KC_RAPC, TD(TD_BRK_RED),         KC_LEFT, KC_DOWN, KC_RGHT
