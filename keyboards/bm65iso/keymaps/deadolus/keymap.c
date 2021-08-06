@@ -45,7 +45,7 @@ void dance_blue_finished(qk_tap_dance_state_t *state, void *user_data) {
     }
 }
 
-void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
+void dance_green_finished(qk_tap_dance_state_t *state, void *user_data) {
   if(get_mods()) return; //return if some modifier pressed
   if (state->count == 1) {
     if (!state->interrupted && !state->pressed) {
@@ -122,7 +122,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_HOME_END] = ACTION_TAP_DANCE_DOUBLE(KC_HOME, KC_END),
   [TD_WHEEL_UP] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_UP,KC_PGUP),
   [TD_WHEEL_DOWN] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_DOWN,KC_PGDOWN),
-  [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset),
+  [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_green_finished, dance_cln_reset, 140),
   [TD_CAPS_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_blue_finished, dance_cln_reset),
   [TD_BRK_RED] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_red_finished, dance_cln_reset),
   [TD_LEFT_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_shift_finished, dance_shift_reset)
