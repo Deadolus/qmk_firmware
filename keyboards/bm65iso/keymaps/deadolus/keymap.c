@@ -46,25 +46,15 @@ void dance_blue_finished(qk_tap_dance_state_t *state, void *user_data) {
 }
 
 void dance_cln_finished(qk_tap_dance_state_t *state, void *user_data) {
-  if(get_mods()) return;
+  if(get_mods()) return; //return if some modifier pressed
   if (state->count == 1) {
-    if (state->interrupted || !state->pressed) {
-      register_code16(KC_ESC);
-      unregister_code16(KC_ESC);
+    if (!state->interrupted && !state->pressed) {
+      tap_code(KC_ESC);
       return;
     }
     layer_on(_GREEN_);
   } else {
-    if(state->count == 2) {
-      //if (state->interrupted) {
       layer_on(_GREEN_);
-      //} else if (state->pressed) return TD_DOUBLE_HOLD;
-    }
-    /* else if(state->count == 3) { */
-    /*   //if (state->interrupted) { */
-    /*   layer_on(_BLUE_); */
-    /*   //} else if (state->pressed) return TD_DOUBLE_HOLD; */
-    /* } */
   }
 }
 
