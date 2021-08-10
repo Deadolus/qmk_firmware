@@ -31,6 +31,8 @@ void dance_blue_finished(qk_tap_dance_state_t *state, void *user_data) {
   if(get_mods()) return;
   if (state->count == 1) {
         if (state->interrupted || !state->pressed) {
+        //do not send caps as blue layer is on
+        if(IS_LAYER_ON(_BLUE_)) return;
         register_code16(KC_CAPS);
         unregister_code16(KC_CAPS);
         return;
@@ -412,5 +414,16 @@ void matrix_scan_user(void) {
       SEND_STRING("start.duckduckgo.com\n");
     }
   }
+}
+#endif
+
+#ifdef TAPPING_TERM_PER_KEY
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case LGUI_T(KC_SPC):
+            return TAPPING_TERM + 1000;
+        default:
+            return TAPPING_TERM;
+    }
 }
 #endif
