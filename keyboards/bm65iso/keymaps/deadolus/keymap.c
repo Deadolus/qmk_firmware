@@ -124,7 +124,7 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_HOME_END] = ACTION_TAP_DANCE_DOUBLE(KC_HOME, KC_END),
   [TD_WHEEL_UP] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_UP,KC_PGUP),
   [TD_WHEEL_DOWN] = ACTION_TAP_DANCE_DOUBLE(KC_MS_WH_DOWN,KC_PGDOWN),
-  [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_green_finished, dance_cln_reset, 140),
+  [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_green_finished, dance_cln_reset, 150),
   [TD_CAPS_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_blue_finished, dance_cln_reset),
   [TD_BRK_RED] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_red_finished, dance_cln_reset),
   [TD_LEFT_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_shift_finished, dance_shift_reset)
@@ -152,7 +152,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       KC_TAB,           KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,                       TD(TD_HOME_END),
       TD(TD_ESC_GREEN), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_NUHS, LT(_YELLOW_, KC_ENT), TD(TD_WHEEL_UP),
       TD(TD_LEFT_SHIFT),KC_NUBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC, KC_UP,                TD(TD_WHEEL_DOWN),
-      KC_LCPO, KC_LGUI, KC_LAPO,                            KC_SPC,                             KC_RAPC, TD(TD_BRK_RED),   KC_LEFT, KC_DOWN,              KC_RGHT
+      KC_LCPO, KC_LGUI, KC_LAPO,                          LGUI_T(KC_SPC),                             KC_RAPC, TD(TD_BRK_RED),   KC_LEFT, KC_DOWN,              KC_RGHT
+      //KC_LCPO, KC_LGUI, KC_LAPO,                          LT(_CYAN_, KC_SPC),                             KC_RAPC, TD(TD_BRK_RED),   KC_LEFT, KC_DOWN,              KC_RGHT
 
       ),
 #else
@@ -188,10 +189,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______,                   KC_0,                               KC_PCMM, _______,          _______, _______, _______
       ),
   [_CYAN_] = LAYOUT_65_iso_blocker(
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+      _______, KC_F1,       KC_F2,      KC_F3,      KC_F4,         KC_F5,        KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  TG(_YELLOW_), _______,
       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, TO(0),   _______,
-      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+      _______, LGUI(KC_1), LGUI(KC_2), LGUI(KC_3), LGUI(KC_4), LGUI(KC_5), LGUI(KC_6), LGUI(KC_7), LGUI(KC_8), LGUI(KC_9), LGUI(KC_0), _______, _______, TO(0),   _______,
+//_______, LGUI(KC_1, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, TO(0),   _______,
+      _______, _______, _______, _______, _______, _______, _______, LGUI(KC_J), LGUI(KC_K), _______, _______, _______, _______, _______, _______,
       _______, _______, _______,                   _______,                            _______, _______,          _______, _______, _______
       ),
   [_MAGENTA_] = LAYOUT_65_iso_blocker(
@@ -422,6 +424,9 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case LGUI_T(KC_SPC):
             return TAPPING_TERM + 1000;
+        case KC_RSPC:
+        case KC_LSPO:
+            return 100;
         default:
             return TAPPING_TERM;
     }
