@@ -115,7 +115,8 @@ enum {
   TD_ESC_GREEN,
   TD_CAPS_BLUE,
   TD_BRK_RED,
-  TD_LEFT_SHIFT
+  TD_LEFT_SHIFT,
+  TD_DEL_INS
 };
 
 // Tap Dance definitions
@@ -127,7 +128,8 @@ qk_tap_dance_action_t tap_dance_actions[] = {
   [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED_TIME(NULL, dance_green_finished, dance_cln_reset, 150),
   [TD_CAPS_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_blue_finished, dance_cln_reset),
   [TD_BRK_RED] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_red_finished, dance_cln_reset),
-  [TD_LEFT_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_shift_finished, dance_shift_reset)
+  [TD_LEFT_SHIFT] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_shift_finished, dance_shift_reset),
+  [TD_DEL_INS] = ACTION_TAP_DANCE_DOUBLE(KC_DEL, KC_INS)
 };
 #endif
 
@@ -148,7 +150,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #ifdef TAP_DANCE_ENABLE
   /* 0: ISO qwerty */
   [_BL] = LAYOUT_65_iso_blocker(
-      TD(TD_CAPS_BLUE), KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,              KC_DEL,
+      TD(TD_CAPS_BLUE), KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,              TD(TD_DEL_INS),
       KC_TAB,           KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC,                       TD(TD_HOME_END),
       TD(TD_ESC_GREEN), KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_NUHS, LT(_YELLOW_, KC_ENT), TD(TD_WHEEL_UP),
       TD(TD_LEFT_SHIFT),KC_NUBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSPC, KC_UP,                TD(TD_WHEEL_DOWN),
@@ -297,6 +299,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         }
       }
       return false;
+    /* case KC_A: */
+    /*           // Detect the activation of only Left Alt */
+    /*     if ((get_mods() & MOD_BIT(KC_LALT)) == MOD_BIT(KC_LALT)) { */
+    /*         if (record->event.pressed) { */
+    /*             // No need to register KC_LALT because it's already active. */
+    /*             // The Alt modifier will apply on this KC_TAB. */
+    /*             unregister_code(KC_LALT); */
+                /* del_mods(MOD_MASK_ALT); */
+    /*             tap_code(KC_PGUP); */
+    /*             register_code(KC_LALT); */
+    /*         } else { */
+    /*             //register_code(KC_LALT); */
+    /*         } */
+    /*         // Do not let QMK process the keycode further */
+    /*         return false; */
+    /*     } */
+    /*     // Else, let QMK process the KC_ESC keycode as usual */
+    /*     return true; */
     default:
       return true; // Process all other keycodes normally
   }
