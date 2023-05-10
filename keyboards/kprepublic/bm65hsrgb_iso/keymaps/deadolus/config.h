@@ -1,4 +1,4 @@
-/* Copyright 2021 deadolus
+/* Copyright 2021 deadolus 2022 p4yne
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,3 +25,12 @@
 #define LEADER_TIMEOUT 1000
 #define LEADER_PER_KEY_TIMING 250
 
+// control underglow
+// i.e. switch it off
+//#define RGBLIGHT_DEFAULT_MODE RGBLIGHT_MODE_STATIC_LIGHT
+//#define RGBLIGHT_DEFAULT_HUE 0
+//#define RGBLIGHT_DEFAULT_SAT UINT8_MAX
+//#define RGBLIGHT_DEFAULT_SAT 0
+//#define RGBLIGHT_DEFAULT_VAL RGBLIGHT_LIMIT_VAL
+//#define RGBLIGHT_DEFAULT_VAL 0
+//#define RGBLIGHT_DEFAULT_SPD 0 

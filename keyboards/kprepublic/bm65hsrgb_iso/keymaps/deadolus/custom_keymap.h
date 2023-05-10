@@ -1,4 +1,4 @@
-/* Copyright 2019 ash0x0 2021 peepeetee, deadolus
+/* Copyright 2019 ash0x0 2021 peepeetee, deadolus 2022 p4yne
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,24 +22,33 @@
 
 #define MILLISECONDS_IN_SECOND 1000
 
-// These are just to make it neater to use builtin HSV values in the keymap
-#define RED {HSV_RED}
-#define CORAL {HSV_CORAL}
-#define ORANGE {HSV_ORANGE}
-#define GOLDEN {HSV_GOLDENROD}
-#define GOLD {HSV_GOLD}
-#define YELLOW {HSV_YELLOW}
-#define CHART {HSV_CHARTREUSE}
-#define GREEN {HSV_GREEN}
-#define SPRING {HSV_SPRINGGREEN}
-#define TURQ {HSV_TURQUOISE}
-#define TEAL {HSV_TEAL}
-#define CYAN {HSV_CYAN}
-#define AZURE {HSV_AZURE}
-#define BLUE {HSV_BLUE}
-#define PURPLE {HSV_PURPLE}
-#define MAGENTA {HSV_MAGENTA}
-#define PINK {HSV_PINK}
+// Custom HSV values
+#define C_HSV_WINERED        0, 255,  85
+#define C_HSV_DARKGOLD      36, 255,  85
+#define C_HSV_DARKBLUE     170, 255,  85
+
+// Default color HSV Values (for inspiration)
+// #define HSV_AZURE       132, 102, 255
+// #define HSV_BLACK         0,   0,   0
+// #define HSV_BLUE        170, 255, 255
+// #define HSV_CHARTREUSE   64, 255, 255
+// #define HSV_CORAL        11, 176, 255
+// #define HSV_CYAN        128, 255, 255
+// #define HSV_GOLD         36, 255, 255
+// #define HSV_GOLDENROD    30, 218, 218
+// #define HSV_GREEN        85, 255, 255
+// #define HSV_MAGENTA     213, 255, 255
+// #define HSV_ORANGE       28, 255, 255
+// #define HSV_PINK        234, 128, 255
+// #define HSV_PURPLE      191, 255, 255
+// #define HSV_RED           0, 255, 255
+// #define HSV_SPRINGGREEN 106, 255, 255
+// #define HSV_TEAL        128, 255, 128
+// #define HSV_TURQUOISE   123,  90, 112
+// #define HSV_WHITE         0,   0, 255
+// #define HSV_YELLOW       43, 255, 255
+// #define HSV_OFF         HSV_BLACK
+
 
 //========================================================== CONFIGURABLE DEFAULTS ==========================================================
 #define RGB_DEFAULT_TIME_OUT 30
@@ -48,7 +57,6 @@
 #define RGB_TIME_OUT_MIN 10
 #define RGB_TIME_OUT_STEP 10
 
-extern bool g_suspend_state;
 bool disable_layer_color;
 
 uint8_t dfa_state;  //state for my language switching DFA
