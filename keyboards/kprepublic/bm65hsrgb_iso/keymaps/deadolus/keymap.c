@@ -40,6 +40,10 @@ void dance_blue_finished(tap_dance_state_t *state, void *user_data) {
         }
         layer_on(_LVL3_);
     } else {
+        for(int i; i < state->count; i++) {
+        register_code16(KC_TAB);
+        unregister_code16(KC_TAB);
+        }
       // if(state->count == 2) {
       //   //if (state->interrupted) {
       //   layer_on(_LVL3_);
@@ -57,6 +61,10 @@ void dance_cln_finished(tap_dance_state_t *state, void *user_data) {
     }
     layer_on(_LVL2_);
   } else {
+        for(int i; i < state->count; i++) {
+        register_code16(KC_ESC);
+        unregister_code16(KC_ESC);
+        }
     // if(state->count == 2) {
     //   //if (state->interrupted) {
     //   layer_on(_LVL2_);
