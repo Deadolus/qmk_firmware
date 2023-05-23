@@ -115,6 +115,7 @@ void dance_cln_reset(tap_dance_state_t *state, void *user_data) {
 enum {
   TD_HOME_END,
   TD_ESC_GREEN,
+  TD_CAPS_BLUE,
   TD_TAB_BLUE
 };
 
@@ -277,7 +278,7 @@ const uint8_t PROGMEM ledmap[][4] = {
   // LEDs off on Layer 0
   //[_LVL0_] = {{0, 0, 0},       LYR_SOLID},
   [_LVL0_] =  {HSV_BLACK,       LYR_SOLID},
-  [_LVL1_] = {HSV_RED,   LYR_TRANS},
+  [_LVL1_] = {HSV_RED,   LYR_SOLID},
   [_LVL2_] = {HSV_GREEN,   LYR_SOLID},
   [_LVL3_] = {HSV_BLUE,   LYR_SOLID},
   [_LVL4_] = {HSV_CYAN,  LYR_SOLID },
@@ -386,7 +387,9 @@ void set_ledkey_by_layer_type(int layer, int ledkey, uint16_t key){
         } else {
             // this key does something - light it up in layer specific color
             // regular key and SOLID or BLACK as layer type
-            set_led_color_by_layer(layer, ledkey);
+          if (layer != _LVL0_) {
+          set_led_color_by_layer(layer, ledkey);
+          }
         }
     }
 }
