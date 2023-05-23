@@ -78,6 +78,33 @@ void dance_cln_finished(tap_dance_state_t *state, void *user_data) {
   }
 }
 
+void dance_caps_finished(tap_dance_state_t *state, void *user_data) {
+  if(get_mods()) return;
+  if (state->count == 1) {
+    if (state->interrupted || !state->pressed) {
+      register_code16(KC_CAPS);
+      unregister_code16(KC_CAPS);
+      return;
+    }
+    layer_on(_LVL3_);
+  } else {
+        for(int i; i < state->count; i++) {
+        register_code16(KC_CAPS);
+        unregister_code16(KC_CAPS);
+        }
+    // if(state->count == 2) {
+    //   //if (state->interrupted) {
+    //   layer_on(_LVL2_);
+    //   //} else if (state->pressed) return TD_DOUBLE_HOLD;
+    // }
+    /* else if(state->count == 3) { */
+    /*   //if (state->interrupted) { */
+    /*   layer_on(_LVL3_); */
+    /*   //} else if (state->pressed) return TD_DOUBLE_HOLD; */
+    /* } */
+  }
+}
+
 void dance_cln_reset(tap_dance_state_t *state, void *user_data) {
   if (state->count == 1 ) {
     layer_off(_LVL2_);
@@ -96,7 +123,8 @@ tap_dance_action_t tap_dance_actions[] = {
   // tap once for home, twice for end
   [TD_HOME_END] = ACTION_TAP_DANCE_DOUBLE(KC_HOME, KC_END),
   [TD_ESC_GREEN] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_cln_finished, dance_cln_reset),
-  [TD_TAB_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_blue_finished, dance_cln_reset)
+  [TD_TAB_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_blue_finished, dance_cln_reset),
+  [TD_CAPS_BLUE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, dance_caps_finished, dance_cln_reset)
 };
 #endif
 
@@ -135,8 +163,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 /* 0: ISO DE qwertz, SPACECADET and TAPDANCE */
   [_LVL0_] = LAYOUT_65_iso_blocker(
-      KC_CAPS, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,
-      TD(TD_TAB_BLUE),  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_LBRC, KC_RBRC,          TD(TD_HOME_END),
+      TD(TD_CAPS_BLUE), KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,      KC_MINS, KC_EQL,  KC_BSPC, KC_DEL,
+      KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,      KC_LBRC, KC_RBRC,          TD(TD_HOME_END),
       TD(TD_ESC_GREEN),  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,   KC_QUOT, KC_NUHS, KC_ENT,  KC_PGUP,
       SC_LSPO, KC_NUBS, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,    KC_SLSH, SC_RSPC, KC_UP,   KC_PGDN,
       SC_LCPO, KC_LGUI, SC_LAPO,                   KC_SPC,                             SC_RAPC, MO(_LVL1_),          KC_LEFT, KC_DOWN, KC_RGHT
